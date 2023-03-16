@@ -1,5 +1,8 @@
-on:
-  pull_request:
+on: ["push", "pull_request"]
+name: "Coveralls"
+
+env:
+      NODE_COVERALLS_DEBUG: 1
       
 jobs:
   coveralls:
