@@ -19,5 +19,4 @@ func main() {
 	d := subtractNumbers(1, 2)
 	m := multiplyNumbers(1, 2)
 	fmt.Printf("sum is %d, difference is %d, multiplied %d", s, d, m)
-	fmt.Println("end")
 }
