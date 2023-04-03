@@ -28,7 +28,7 @@ jobs:
           flag-name: run-$
           path-to-lcov: coverage.lcov
   finish:
-    needs: test
+    needs: coveralls
     if: ${{ success() }}
     runs-on: ubuntu-latest
     steps:
