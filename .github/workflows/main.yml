@@ -1,10 +1,6 @@
 on: ["push", "pull_request"]
 name: "Coveralls"
 
-env:
-  global:
-    - COVERALLS_PARALLEL=true
-
 jobs:
   coveralls:
     runs-on: ubuntu-latest
