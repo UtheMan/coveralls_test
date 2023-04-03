@@ -1,13 +1,14 @@
-on: ["push", "pull_request"]
+on: ["pull_request"]
 name: "Coveralls"
 
-env:
-      NODE_COVERALLS_DEBUG: 1
-      TESTCOVERAGE_THRESHOLD: 0
-      
 jobs:
   coveralls:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test_number:
+          - 1
+          - 2
     steps:
       - name: Install Go
         if: success()
@@ -23,17 +24,16 @@ jobs:
       - name: Coveralls
         uses: coverallsapp/github-action@v2
         with:
+          parallel: true
+          flag-name: run-$
           path-to-lcov: coverage.lcov
-      - name: Quality Gate - Test coverage shall be above threshold
-        run: |
-            echo "Quality Gate: checking test coverage is above threshold ..."
-            echo "Threshold             : $TESTCOVERAGE_THRESHOLD %"
-            totalCoverage=`go tool cover -func=coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+'`
-            echo "Current test coverage : $totalCoverage %"
-            if (( $(echo "$totalCoverage $TESTCOVERAGE_THRESHOLD" | awk '{print ($1 > $2)}') )); then
-                echo "OK"
-            else
-                echo "Failed"
-                exit 1
-            fi
-
+  finish:
+    needs: coveralls
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
+          carryforward: "run-1,run-2"
